@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sleap-id"
+version = "0.1.0"
+description = "Identity assignment for SLEAP tracks using idtracker.ai's contrastive method."
+requires-python = ">=3.11"
+dependencies = [
+    "sleap-io>=0.7",
+    "h5py",
+    "numpy",
+    "av",
+    "opencv-python-headless",
+    "click>=8.1",
+    "pyyaml",
+    "psutil",
+    "torch",
+    "torchvision",
+]
+
+[project.scripts]
+# `sleap-id ...` until the `id` group is added to SLEAP's own `sleap` command.
+sleap-id = "sleap_id.cli:cli"
+
+[tool.setuptools.packages.find]
+where = ["src"]

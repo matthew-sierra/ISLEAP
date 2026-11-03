@@ -1,0 +1,21 @@
+# --- Python ---------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+
+# --- Data and run outputs -------------------------------------------------
+# Sessions, crops, checkpoints and SLEAP files are data, not source.
+*.h5
+*.pt
+*.slp
+*.mp4
+*.npy
+*.npz
+*.partial
+*.sleap_id/
+
+# --- OS -------------------------------------------------------------------
+.DS_Store

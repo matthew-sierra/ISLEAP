@@ -1,0 +1,60 @@
+# sleap-id roles file, generated from corrected_mice_camera0_topb.slp
+# Fill in the settings marked REQUIRED, then run `sleap-id run` (everything)
+# or `sleap-id prepare` (crops only; the training section is not needed for it).
+#
+# Nodes in this skeleton:
+#   - Nose
+#   - Ear_R
+#   - Ear_L
+#   - TTI
+#   - TailTip
+#   - Head
+#   - Trunk
+#   - Tail_0
+#   - Tail_1
+#   - Tail_2
+#   - Shoulder_left
+#   - Shoulder_right
+#   - Haunch_left
+#   - Haunch_right
+#   - Neck
+
+config_version: 1
+
+n_animals:              # REQUIRED: number of animals in the video
+
+# --- Keypoint roles --------------------------------------------------------
+centroid_node:          # REQUIRED: the crop is rotated about this node
+top_node:               # REQUIRED: rotated to sit directly above centroid_node
+top_node_fallback:      # optional: used only when top_node is missing
+bottom_node:            # REQUIRED: sets how high the centroid sits in the crop
+surrounding_keypoints:  # REQUIRED: nodes ON the body outline (>= 3)
+  # - NodeName
+bounded_keypoints: []   # nodes INSIDE the outline; used only when a
+                        # surrounding node is missing
+
+# --- Inputs ----------------------------------------------------------------
+instance_source: both   # predicted | user | both
+color_mode: grayscale   # grayscale | rgb
+
+# --- Crop shape ------------------------------------------------------------
+max_crop_area: 6400     # pixels; larger crops are scaled down (null = no limit)
+size_stat: median       # median | mean of body extent sets the crop size
+min_hull_keypoints: 3   # fewer usable outline nodes -> no crop
+
+# --- Training sample -------------------------------------------------------
+min_fragment_length: 4  # shorter track runs are not trained on
+crops_per_fragment:     # null = every frame; N = up to N evenly spaced per fragment
+seed: 0                 # for the random steps of training
+
+# --- Training --------------------------------------------------------------
+# The loss is checked every 50 batches (lower is better). Training stops, and
+# saves its final weights, once the loss has reached target_loss AND has not
+# improved for patience_batches batches since. Whenever the loss has not
+# improved for lr_patience_batches batches, the learning rate is halved.
+training:
+  resume_from:            # optional: checkpoint of an earlier run to start from,
+                          # e.g. old_run/checkpoints/latest.pt (null = start fresh)
+  target_loss:            # REQUIRED for training: loss level to reach
+  patience_batches: 500   # batches without improvement before stopping
+  lr_patience_batches: 250  # batches without improvement before halving the learning rate
