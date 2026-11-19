@@ -65,6 +65,38 @@ sleap-id init-config --slp_file mice.predictions.slp --config roles.yaml
 
 Open `roles.yaml` and fill in every setting marked `REQUIRED`: the number of animals, the keypoint roles that orient each crop, and the training target (see [Required User Inputs](#required-user-inputs)). A blank template generated from a 15-node mouse skeleton is in `examples/sample_config.yaml`.
 
+### Writing lists of keypoints
+
+Give `surrounding_keypoints` and `bounded_keypoints` as an array: the node names in square brackets, separated by commas, on one line. Use the names exactly as they appear in the skeleton, including capital letters. For example:
+
+```yaml
+surrounding_keypoints: [Nose, Ear_L, Shoulder_left, Haunch_left, TTI, Haunch_right, Shoulder_right, Ear_R]
+bounded_keypoints: [Head, Neck, Trunk]
+```
+
+The order of the names does not matter, since the outline is the convex hull of the points. `surrounding_keypoints` needs at least three nodes on the outer edge of the body. `bounded_keypoints` lists nodes inside that outline, and can be left as `[]`.
+
+### Choosing `target_loss`
+
+The loss measures how well the network separates the animals, and lower is better. Each batch's loss is the average over its pairs of crops: a pair of the same animal adds $\max(0, d - 1)^2$, and a pair of different animals adds $\max(0, 10 - d)^2$, where $d$ is the distance between the two crops in the embedding space. So the loss is never below 0, and an untrained network usually starts between about 15 and 45.
+
+Training is checked every 50 batches, against the mean loss of those 50 batches. As a guide, here is that mean during a full training on a 30-minute video of five mice (108,000 frames):
+
+| Batches trained | Mean loss of the last 50 batches |
+|---|---|
+| 50 | 16.0 |
+| 1,000 | 9.8 |
+| 2,000 | 3.3 |
+| 5,000 | 0.50 |
+| 10,000 | 0.31 |
+| 18,500 | 0.11 |
+
+**We recommend a `target_loss` between 0.1 and 1.** Around 0.5 is a reasonable first choice; 0.1 to 0.2 trains longer for a cleaner separation.
+
+- Values of about 10 or more are reached almost immediately, so training stops on `patience_batches` alone, long before the network is useful.
+- Values below about 0.05 may never be reached. Training stops only once the loss has reached `target_loss`, so such a run would not stop on its own.
+- The loss a video reaches depends on how many animals it has and how different they look. Fewer, more distinct animals reach lower values; check `training_log.csv` from a first run and adjust.
+
 ## Run
 
 A single command runs every stage, from the video to a new `.slp` file with identities:
@@ -134,7 +166,7 @@ All of the inputs are saved in the YAML file (see `config.py` for every setting 
 1. Number of animals (`n_animals`)
 2. Key nodes (`centroid_node`, `top_node`, `bottom_node`, and optionally `top_node_fallback`)
 3. The outline of the body: `surrounding_keypoints` (nodes on the outline) and `bounded_keypoints` (nodes inside it)
-4. The training target (`training.target_loss`), and optionally how long to wait before stopping (`training.patience_batches`, default 500) and before halving the learning rate (`training.lr_patience_batches`, default 250)
+4. The training target (`training.target_loss`; see [Choosing `target_loss`](#choosing-target_loss) for the range to use), and optionally how long to wait before stopping (`training.patience_batches`, default 500) and before halving the learning rate (`training.lr_patience_batches`, default 250)
 5. Optionally, a checkpoint from an earlier run to start training from (`training.resume_from`)
 
 The remaining settings (crop size limit, color mode, which SLEAP instances to use, and so on) have defaults that match what idTracker.ai and the previous version of this project used.
