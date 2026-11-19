@@ -235,10 +235,10 @@ centroid_node:          # REQUIRED: the crop is rotated about this node
 top_node:               # REQUIRED: rotated to sit directly above centroid_node
 top_node_fallback:      # optional: used only when top_node is missing
 bottom_node:            # REQUIRED: sets how high the centroid sits in the crop
-surrounding_keypoints:  # REQUIRED: nodes ON the body outline (>= 3)
-  # - NodeName
-bounded_keypoints: []   # nodes INSIDE the outline; used only when a
-                        # surrounding node is missing
+surrounding_keypoints: []  # REQUIRED: array of nodes ON the body outline (>= 3),
+                           # e.g. [NodeA, NodeB, NodeC]
+bounded_keypoints: []      # array of nodes INSIDE the outline, e.g. [NodeD, NodeE];
+                           # used only when a surrounding node is missing
 
 # --- Inputs ----------------------------------------------------------------
 instance_source: both   # predicted | user | both
