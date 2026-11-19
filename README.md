@@ -13,8 +13,8 @@ Thus, this project takes SLEAP predictions as its input and assigns a consistent
 **1. Download the code.** Clone this repository onto your machine (or fork it on GitHub first and clone your fork):
 
 ```bash
-git clone https://github.com/matthew-sierra/sleap-id-v2.git
-cd sleap-id-v2
+git clone https://github.com/matthew-sierra/ISLEAP.git
+cd ISLEAP
 ```
 
 **2. Create an environment.** The package needs Python 3.11 or newer. Keeping it in its own environment stops its dependencies from conflicting with other software, including an existing SLEAP installation. With conda:
@@ -52,7 +52,7 @@ Training runs on a GPU when one is available: NVIDIA GPUs (CUDA) and Apple-silic
 To install on a machine where you will not edit the code (for example a computing cluster), you can skip the clone and install straight from GitHub:
 
 ```bash
-pip install git+https://github.com/matthew-sierra/sleap-id-v2.git
+pip install git+https://github.com/matthew-sierra/ISLEAP.git
 ```
 
 ## Configure
