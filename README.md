@@ -8,6 +8,53 @@ Thus, this project takes SLEAP predictions as its input and assigns a consistent
 
 # Software
 
+## Install
+
+**1. Download the code.** Clone this repository onto your machine (or fork it on GitHub first and clone your fork):
+
+```bash
+git clone https://github.com/matthew-sierra/sleap-id-v2.git
+cd sleap-id-v2
+```
+
+**2. Create an environment.** The package needs Python 3.11 or newer. Keeping it in its own environment stops its dependencies from conflicting with other software, including an existing SLEAP installation. With conda:
+
+```bash
+conda create -n sleap_id python=3.11
+conda activate sleap_id
+```
+
+or, without conda:
+
+```bash
+python3.11 -m venv .venv
+source .venv/bin/activate           # on Windows: .venv\Scripts\activate
+```
+
+**3. Install the package.** From inside the cloned folder, with the environment active:
+
+```bash
+pip install -e .
+```
+
+This installs the dependencies (sleap-io, PyTorch, OpenCV, scikit-learn and a few others) and creates the `sleap-id` command. Check that it worked:
+
+```bash
+sleap-id --help
+```
+
+The `-e` ("editable") flag means that changes you make to the code, or updates you pull with `git pull`, take effect without reinstalling.
+
+*Please note: activate the environment (`conda activate sleap_id`, or `source .venv/bin/activate`) in every new terminal before running `sleap-id`. If the terminal reports `command not found: sleap-id`, the environment is not active, or the package was installed into a different one.*
+
+Training runs on a GPU when one is available: NVIDIA GPUs (CUDA) and Apple-silicon Macs are used automatically, and the CPU otherwise, which is much slower. On a machine with an NVIDIA GPU, if `python -c "import torch; print(torch.cuda.is_available())"` prints `False`, install the PyTorch build that matches your CUDA version from [pytorch.org](https://pytorch.org/get-started/locally/) and then run `pip install -e .` again.
+
+To install on a machine where you will not edit the code (for example a computing cluster), you can skip the clone and install straight from GitHub:
+
+```bash
+pip install git+https://github.com/matthew-sierra/sleap-id-v2.git
+```
+
 ## Configure
 
 Everything the program needs to know about your data lives in one YAML file. To create a starter file that lists the nodes of your skeleton, run:
