@@ -18,6 +18,7 @@ dependencies = [
     "psutil",
     "torch",
     "torchvision",
+    "scikit-learn",
 ]
 
 [project.scripts]
